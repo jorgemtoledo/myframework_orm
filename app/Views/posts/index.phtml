@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <h1><?php echo $this->getPageTitle(); ?>
+    <a href="/post/create" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus-sign"></i> Novo post</a>
+    </h1>
+  </div>
+  <?php $this->renderView('alerts/_success');?>
+  <?php $this->renderView('alerts/_errors');?>
+
+  <?php foreach($this->view->posts as $post){ ?>
+  <div class="row">
+    <a href="/post/<?php echo $post->id; ?>/show">
+      <h3><?php echo $post->title; ?></h3>
+    </a>
+    <p class="text-justify"><?php echo $post->content; ?></p>
+    <p class="text-right">
+      <a href="/post/<?php echo $post->id ?>/edit" class="btn btn-warning btn-xs">
+        <i class="glyphicon glyphicon-pencil"></i>
+      </a>
+      <a href="/post/<?php echo $post->id ?>/delete" class="btn btn-danger btn-xs" onclick="return confirm('Deseja realmente deletar?')">
+        <i class="glyphicon glyphicon-remove-sign"></i>
+      </a>
+    </p>
+  </div>
+  <?php } ?>
+</div>
