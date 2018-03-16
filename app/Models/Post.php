@@ -1,10 +1,17 @@
 <?php
 namespace App\Models;
-use Core\BaseModel;
 
-class Post extends BaseModel
+// use Core\BaseModel;
+// class Post extends BaseModel
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
 {
-  protected $table = "posts";
+  public $table = "posts";
+  public $timestamps = false;
+
+  protected $fillable = ['title', 'content'];
 
   public function rules()
   {

@@ -1,6 +1,9 @@
 <?php
 return [
-  /* Options (mysql, sqlite) */
+// Options (core, illuminate)
+'baseModel'=>'illuminate',
+
+/* Options (mysql, sqlite) */
 'driver' => 'mysql',
 'sqlite' => [
   'database' => 'database.db'
