@@ -16,7 +16,12 @@ Class Route
     foreach($routes as $route)
     {
       $expArr = explode('@', $route[1]);
-      $r = [$route[0], $expArr[0], $expArr[1]];
+      if($route[2])
+      {
+        $r = [$route[0], $expArr[0], $expArr[1], $route[2]];
+      } else {
+        $r = [$route[0], $expArr[0], $expArr[1]];
+      }
       $newRoutes[] = $r;
     }
     $this->routes = $newRoutes;
@@ -66,9 +71,13 @@ Class Route
         $found = true;
         $controller = $route[1];
         $action = $route[2];
+        $auth = new Auth;
+        if($route[3] && !$auth->check())
+        {
+          $action = 'forbiden';
+        }
         break;
-      }
-      
+      }      
     }
 
     if($found)

@@ -5,9 +5,11 @@ use App\Models\User;
 use Core\BaseController;
 use Core\Redirect;
 use Core\Validator;
+Use Core\Authenticate;
 
 class UserController extends BaseController
 {
+  use Authenticate;
   private $user;
 
   public function __construct()
