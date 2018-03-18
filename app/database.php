@@ -1,7 +1,7 @@
 <?php
 return [
 // Options (core, illuminate)
-'baseModel'=>'illuminate',
+// 'baseModel'=>'illuminate',
 
 /* Options (mysql, sqlite) */
 'driver' => 'mysql',

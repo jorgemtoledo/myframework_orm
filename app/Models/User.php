@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+use Core\BaseModelEloquent;
+
+
+// class User extends Model
+class User extends BaseModelEloquent
 {
   public $table = 'users';
   public $timestamps = false;
