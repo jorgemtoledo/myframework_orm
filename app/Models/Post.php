@@ -28,5 +28,10 @@ class Post extends BaseModelEloquent
     return $this->belongsTo(User::class);
   }
 
+  public function category()
+  {
+    return $this->belongsToMany(Category::class);
+  }
+
   
 }

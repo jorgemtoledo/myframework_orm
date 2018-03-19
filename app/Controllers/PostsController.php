@@ -1,6 +1,6 @@
 <?php
 namespace App\Controllers;
-
+use App\Models\Category;
 use Core\BaseController;
 use App\Models\Post;
 // Use Core\Container;
@@ -37,46 +37,46 @@ class PostsController extends BaseController
   public function create()
   {
     $this->setPageTitle('New Post');
+    $this->view->categories = Category::all();
     return $this->renderView('posts/create', 'layout');
   }
 
   public function store($request)
   {
-    $data = [
-      'user_id' => Auth::id(),
-      'title' => $request->post->title,
-      'content' => $request->post->content
-    ];
-
-    if(Validator::make($data, $this->post->rules()))
-    {
-      return Redirect::route("/post/create");
-    }
-    
-    // if($this->post->create($data))
-    // {
-    //   return Redirect::route('/posts');
-    // } else {
-    //   return Redirect::route('/posts', [
-    //     'errors' => ['Erro ao cadastrar!']
-    //   ]);
-    // }
-
-    try{
-      $this->post->create($data);
-      return Redirect::route('/posts', [
-        'success' => ['Post criado com sucesso!']
-      ]);
-    }catch(\Exception $e){
-      return Redirect::route('/posts', [
-        'errors' => [$e->getMessage()]
-      ]);
-    }
+      $data = [
+          'user_id' => Auth::id(),
+          'title' => $request->post->title,
+          'content' => $request->post->content
+      ];
+      if (Validator::make($data, $this->post->rules())) {
+          return Redirect::route("/post/create");
+      }
+      try{
+          $post = $this->post->create($data);
+          if(isset($request->post->category_id)){
+              $post->category()->attach($request->post->category_id);
+          }
+          return Redirect::route('/posts', [
+              'success' => ['Post criado com sucesso!']
+          ]);
+      }catch(\Exception $e){
+          return Redirect::route('/posts', [
+              'errors' => [$e->getMessage()]
+          ]);
+      }
+      /*if($this->post->create($data)){
+          return Redirect::route('/posts');
+      }else{
+          return Redirect::route('/posts', [
+              'errors' => ['Erro ao inserir no banco de dados!']
+          ]);
+      }*/
   }
 
   public function edit($id)
   {
     $this->view->post = $this->post->find($id);
+    $this->view->categories = Category::all();
     if(Auth::id() != $this->view->post->user->id){
       return Redirect::route('/posts', [
           'errors' => ['Você não pode editar post de outro autor.']
@@ -113,6 +113,12 @@ class PostsController extends BaseController
       // $post = Post::find($id);
       $post = $this->post->find($id);
       $post->update($data);
+      if(isset($request->post->category_id))
+      {
+        $post->category()->sync($request->post->category_id);
+      } else {
+        $post->category()->detach();
+      }
       return Redirect::route('/posts', [
         'success' => ['Post atualizado com sucesso!']
       ]);
@@ -151,7 +157,5 @@ class PostsController extends BaseController
       ]);
     }
   }
-
-
 
 }

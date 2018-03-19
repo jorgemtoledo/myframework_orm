@@ -14,8 +14,14 @@
     </a>
     <p class="text-justify"><?php echo $post->content; ?></p>
     <p>
-      <strong>Autor: <?php echo $post->user->name; ?></strong>
-
+      <strong>Autor: <?php echo $post->user->name; ?></strong><br>
+      <strong>Categorias:</strong>
+      <?php 
+        foreach($post->category as $cat)
+        {
+          echo $cat->name . " ";
+        }      
+      ?>
       <?php if($this->auth->check() && $post->user->id == $this->auth->id()) : ?>
       <span class="pull-right">
         <a href="/post/<?php echo $post->id ?>/edit" class="btn btn-warning btn-xs">
