@@ -13,7 +13,7 @@ class Post extends BaseModelEloquent
   public $table = "posts";
   public $timestamps = false;
 
-  protected $fillable = ['title', 'content'];
+  protected $fillable = ['user_id', 'title', 'content'];
 
   public function rules()
   {
@@ -21,6 +21,11 @@ class Post extends BaseModelEloquent
       'title' => 'required',
       'content' => 'min:10'
     ];
+  }
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
   }
 
   

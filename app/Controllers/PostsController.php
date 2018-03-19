@@ -7,6 +7,7 @@ use App\Models\Post;
 use Core\Redirect;
 use Core\Session;
 use Core\Validator;
+use Core\Auth;
 
 class PostsController extends BaseController
 {
@@ -42,6 +43,7 @@ class PostsController extends BaseController
   public function store($request)
   {
     $data = [
+      'user_id' => Auth::id(),
       'title' => $request->post->title,
       'content' => $request->post->content
     ];
@@ -75,9 +77,14 @@ class PostsController extends BaseController
   public function edit($id)
   {
     $this->view->post = $this->post->find($id);
-    $this->setPageTitle('Edit post - ' . $this->view->post->title);
-    return $this->renderView('posts/edit', 'layout');
-  }
+    if(Auth::id() != $this->view->post->user->id){
+      return Redirect::route('/posts', [
+          'errors' => ['Você não pode editar post de outro autor.']
+      ]);
+    }
+      $this->setPageTitle('Edit post - ' . $this->view->post->title);
+      return $this->renderView('posts/edit', 'layout');
+    }
 
   public function update($id, $request)
   {
@@ -128,7 +135,13 @@ class PostsController extends BaseController
     // }
 
     try{
-      $post = $this->post->find($id)->delete();
+      $post = $this->post->find($id);
+      if(Auth::id() != $post->user->id){
+        return Redirect::route('/posts', [
+            'errors' => ['Você não pode deletar post de outro autor.']
+        ]);
+      }
+      $post->delete();
       return Redirect::route('/posts', [
         'success' => ['Post deletado com sucesso!']
       ]);
